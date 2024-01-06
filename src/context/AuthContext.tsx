@@ -4,15 +4,17 @@ import { createContext, useEffect, useState, ReactNode, useMemo } from "react";
 // ** Next Import
 
 // ** Types
-import {
-  AuthValuesType,
-  LoginParams,
-  UserDataType,
-  SignupParams,
-  ForgotpasswordParams,
-} from "./types";
+import { AuthValuesType, ForgotpasswordParams } from "./types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+} from "@firebase/auth";
+import { auth, db } from "@/firebase/firebaseConfig";
+import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -21,7 +23,6 @@ const defaultProvider: AuthValuesType = {
   setUser: () => null,
   setLoading: () => Boolean,
   login: () => Promise.resolve(),
-  signup: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   forgotpassword: () => Promise.resolve(),
 };
@@ -34,26 +35,47 @@ type Props = {
 
 const AuthProvider = ({ children }: Props) => {
   // ** States
-  const [user, setUser] = useState<UserDataType | null>(defaultProvider.user);
+  const [user, setUser] = useState<any>(defaultProvider.user);
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading);
 
   // ** Hooks
-  const authStatus = useSelector((state: RootState) => state.auth.authStatus);
+  const router = useRouter();
 
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
       setLoading(true);
-      setTimeout(() => {
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          setLoading(false);
+          router.push("/sign-in");
+          return;
+        }
+        setUser(user);
+        router.push("/");
         setLoading(false);
-      }, 3000);
+      });
     };
     initAuth();
     // eslint-disable-next-line
-  }, [authStatus]);
+  }, []);
 
-  const handleLogin = async (params: LoginParams) => {};
-  // Signup Process
-  const handleSignup = async (params: SignupParams) => {};
+  const handleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+
+    await signInWithPopup(auth, provider).then(async (newUser) => {
+      if (!newUser.user) return;
+      if ((await getDoc(doc(db, "users", newUser.user?.uid))).exists()) return;
+
+      const userProfile = doc(collection(db, "users"), newUser.user?.uid);
+
+      await setDoc(userProfile, {
+        uid: newUser.user?.uid,
+        email: newUser.user?.email,
+        displayName: newUser.user?.displayName,
+        photoURL: newUser.user?.photoURL ?? "/assets/avatar.jpg",
+      });
+    });
+  };
 
   // Forgot Password (Using Email)
   const handleForgotPassword = async (params: ForgotpasswordParams) => {
@@ -71,7 +93,6 @@ const AuthProvider = ({ children }: Props) => {
       setLoading,
       login: handleLogin,
       logout: handleLogout,
-      signup: handleSignup,
       forgotpassword: handleForgotPassword,
     };
     // eslint-disable-next-line
