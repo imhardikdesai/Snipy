@@ -1,6 +1,6 @@
 export type ErrCallbackType = (err: { [key: string]: string }) => void;
 
-export type ForgotpasswordParams = {};
+export type ForgotPasswordParams = {};
 
 export type UserDataType = {
   id: string;
@@ -19,5 +19,5 @@ export type AuthValuesType = {
   setLoading: (value: boolean) => void;
   setUser: (value: UserDataType | null) => any;
   login: () => any;
-  forgotpassword: (params: ForgotpasswordParams) => any;
+  forgotpassword: (params: ForgotPasswordParams) => any;
 };

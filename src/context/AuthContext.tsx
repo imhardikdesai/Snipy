@@ -4,9 +4,7 @@ import { createContext, useEffect, useState, ReactNode, useMemo } from "react";
 // ** Next Import
 
 // ** Types
-import { AuthValuesType, ForgotpasswordParams } from "./types";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { AuthValuesType, ForgotPasswordParams } from "./types";
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -15,6 +13,7 @@ import {
 import { auth, db } from "@/firebase/firebaseConfig";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -61,29 +60,39 @@ const AuthProvider = ({ children }: Props) => {
 
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider)
+      .then(async (newUser) => {
+        if (!newUser.user) return;
+        if ((await getDoc(doc(db, "users", newUser.user?.uid))).exists())
+          return;
 
-    await signInWithPopup(auth, provider).then(async (newUser) => {
-      if (!newUser.user) return;
-      if ((await getDoc(doc(db, "users", newUser.user?.uid))).exists()) return;
+        const userProfile = doc(collection(db, "users"), newUser.user?.uid);
 
-      const userProfile = doc(collection(db, "users"), newUser.user?.uid);
-
-      await setDoc(userProfile, {
-        uid: newUser.user?.uid,
-        email: newUser.user?.email,
-        displayName: newUser.user?.displayName,
-        photoURL: newUser.user?.photoURL ?? "/assets/avatar.jpg",
-      });
-    });
+        await setDoc(userProfile, {
+          uid: newUser.user?.uid,
+          email: newUser.user?.email,
+          displayName: newUser.user?.displayName,
+          photoURL: newUser.user?.photoURL ?? "/assets/avatar.jpg",
+        });
+        router.replace("/");
+        router.refresh();
+      })
+      .catch(() => toast.error("Failed to Login"));
   };
 
   // Forgot Password (Using Email)
-  const handleForgotPassword = async (params: ForgotpasswordParams) => {
+  const handleForgotPassword = async (params: ForgotPasswordParams) => {
     console.log(params);
   };
 
   // Logout (Clear the Session)
-  const handleLogout = async () => {};
+  const handleLogout = async () => {
+    await auth.signOut();
+    setUser(null);
+    toast.success("Logout Successful");
+    router.push("/sign-in");
+    router.refresh();
+  };
 
   const values = useMemo(() => {
     return {

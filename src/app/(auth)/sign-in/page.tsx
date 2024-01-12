@@ -12,7 +12,7 @@ const SignIn = () => {
       <div className="backdrop-filter backdrop-blur-lg bg-opacity-10 flex justify-center items-center flex-col bg-white bg-clip-padding min-h-screen">
         <div className="max-w-full text-center">
           <div className="my-3">
-            <h1 className="text-2xl font-bold">Let's Get Started</h1>
+            <h1 className="text-2xl font-bold">Let{`'`}s Get Started</h1>
             <p className="text-sm">
               sign up to {APP_NAME} and get started immediately
             </p>
