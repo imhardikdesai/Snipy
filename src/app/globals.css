@@ -2,11 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    /* background-color: #1E2021; */
-}
-
 ::selection {
     color: black;
     background-color: #e9c48a;
+}
+
+.techstack-radio div {
+    flex-direction: row !important;
+    justify-content: start;
 }

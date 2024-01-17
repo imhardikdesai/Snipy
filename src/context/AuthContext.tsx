@@ -13,7 +13,7 @@ import {
 import { auth, db } from "@/firebase/firebaseConfig";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
