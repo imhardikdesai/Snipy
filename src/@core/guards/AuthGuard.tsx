@@ -35,7 +35,7 @@ const AuthGuard = (props: AuthGuardProps) => {
         return;
       }
 
-      if (auth.user === null) {
+      if (auth.user === null && !window.localStorage.getItem("user")) {
         if (pathname !== "/") {
           router.replace(
             "/sign-in/?" + createQueryString("returnUrl", pathname)

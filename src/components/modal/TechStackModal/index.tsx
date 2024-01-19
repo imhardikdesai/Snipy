@@ -1,4 +1,4 @@
-import React from "react";
+import React, { cloneElement } from "react";
 import {
   Modal,
   ModalContent,
@@ -6,55 +6,119 @@ import {
   ModalBody,
   ModalFooter,
   Button,
+  useDisclosure,
+  Tooltip,
 } from "@nextui-org/react";
+import FormControlBox from "@/components/form/FormControlBox";
+import { useForm } from "react-hook-form";
+import { Plus } from "lucide-react";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
+const techStackSchema = yup.object().shape({
+  name: yup.string().required("Name is required").max(255, "Name is too long"),
+  icon: yup.string().required("Icon is required").max(255, "Icon is too long"),
+});
+
+type FormTypes = {
+  name: string;
+  icon: string;
+};
 const TechStackModal = ({
-  isOpen,
-  onOpenChange,
+  trigger,
+  modalData,
 }: {
-  isOpen: boolean;
-  onOpenChange: (isOpen: boolean) => void;
+  trigger: React.ReactElement;
+  modalData?: any;
 }) => {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const defaultValue: FormTypes = { name: "", icon: "" };
+
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm<FormTypes>({
+    resolver: yupResolver(techStackSchema),
+    defaultValues: defaultValue,
+  });
+
+  const onSubmit = (data: FormTypes) => {
+    console.log(data);
+  };
+
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-      <ModalContent>
-        {(onClose) => (
-          <>
-            <ModalHeader className="flex flex-col gap-1">
-              Modal Title
-            </ModalHeader>
-            <ModalBody>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-                pulvinar risus non risus hendrerit venenatis. Pellentesque sit
-                amet hendrerit risus, sed porttitor quam.
-              </p>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-                pulvinar risus non risus hendrerit venenatis. Pellentesque sit
-                amet hendrerit risus, sed porttitor quam.
-              </p>
-              <p>
-                Magna exercitation reprehenderit magna aute tempor cupidatat
-                consequat elit dolor adipisicing. Mollit dolor eiusmod sunt ex
-                incididunt cillum quis. Velit duis sit officia eiusmod Lorem
-                aliqua enim laboris do dolor eiusmod. Et mollit incididunt nisi
-                consectetur esse laborum eiusmod pariatur proident Lorem eiusmod
-                et. Culpa deserunt nostrud ad veniam.
-              </p>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
-                Close
-              </Button>
-              <Button color="primary" onPress={onClose}>
-                Action
-              </Button>
-            </ModalFooter>
-          </>
-        )}
-      </ModalContent>
-    </Modal>
+    <React.Fragment>
+      {cloneElement(trigger, {
+        onClick: onOpen,
+      })}
+      <Modal
+        onClose={() => reset(defaultValue)}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      >
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">
+                  {modalData ? "Edit" : "Create"} Tech Stack
+                </ModalHeader>
+                <ModalBody>
+                  {/* Name */}
+                  <FormControlBox
+                    control={control}
+                    errors={errors}
+                    label="Name"
+                    name="name"
+                    size="sm"
+                  />
+                  {/* Icon */}
+                  <div className="flex justify-between items-center gap-1">
+                    <FormControlBox
+                      control={control}
+                      errors={errors}
+                      label="Icon"
+                      name="icon"
+                      size="sm"
+                    />
+                    <Tooltip
+                      size="sm"
+                      placement="right"
+                      color="primary"
+                      content="Select custom icon"
+                    >
+                      <a
+                        target="_blank"
+                        href="https://icon-sets.iconify.design"
+                      >
+                        <Button
+                          isIconOnly
+                          color="primary"
+                          variant="faded"
+                          size="sm"
+                        >
+                          <Plus />
+                        </Button>
+                      </a>
+                    </Tooltip>
+                  </div>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" color="primary">
+                    {modalData ? "Update" : "Create"}
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </form>
+      </Modal>
+    </React.Fragment>
   );
 };
 

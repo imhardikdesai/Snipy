@@ -23,7 +23,7 @@ const GuestGuard = (props: GuestGuardProps) => {
       return;
     }
 
-    if (auth?.user) {
+    if (auth?.user || localStorage.getItem("user")) {
       router.replace("/");
       router.refresh();
     }

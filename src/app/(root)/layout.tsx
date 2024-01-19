@@ -15,7 +15,7 @@ export default function DashboardLayout({
         <div>
           <CollectionTab />
         </div>
-        <div>
+        <div className="w-full">
           <TopNav />
           <div className="p-2 bg-[#272a2b] text-gray-100">{children}</div>
         </div>

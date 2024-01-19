@@ -41,22 +41,24 @@ const CustomTreeItem = (props: any) => {
   );
 };
 
-export default function BarTreeView() {
+export default function BarTreeView({ handleToggle, expanded }: any) {
   return (
     <Box sx={{ flexGrow: 1, width: "100%" }}>
       <TreeView
         aria-label="icon expansion"
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
+        onNodeToggle={handleToggle}
+        expanded={expanded}
         sx={{ position: "relative" }}
       >
         <CustomTreeItem nodeId="1" label="Applications">
-          <CollectionChip />
+          <CollectionChip id={1} />
         </CustomTreeItem>
         <CustomTreeItem nodeId="5" label="Documents">
-          <CollectionChip />
-          <CollectionChip />
-          <CollectionChip />
+          <CollectionChip id={2} />
+          <CollectionChip id={3} />
+          <CollectionChip id={4} />
         </CustomTreeItem>
       </TreeView>
     </Box>

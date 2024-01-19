@@ -40,8 +40,9 @@ export default function RootLayout({
                   crawlSpeed={200}
                   height={2}
                   crawl={true}
+                  showSpinner={false}
                   easing="ease"
-                  shadow="0 0 10px #fbad50,0 0 5px #fbad50"
+                  // shadow="0 0 10px #fbad50,0 0 5px #fbad50"
                 />
                 <ToastContainer
                   hideProgressBar={false}

@@ -2,14 +2,14 @@ import React from "react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Snippy - a simple code snippet manager for developers",
+  title: "Snipy - a simple code snippet manager for developers",
   description:
-    "Snippy - a simple code snippet manager for developers. where you can store and share code snippets. it will be helpful for your next project.",
+    "Snipy - a simple code snippet manager for developers. where you can store and share code snippets. it will be helpful for your next project.",
 };
 
 export default function App() {
   return (
-    <main className="">
+    <main className="w-full">
       Home Page Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod
       minus eaque natus atque maiores iusto tempore inventore reiciendis
       provident at laboriosam architecto voluptatibus similique iure velit,

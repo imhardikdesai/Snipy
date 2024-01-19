@@ -43,15 +43,25 @@ const AuthProvider = ({ children }: Props) => {
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
       setLoading(true);
+      const user = localStorage?.getItem("user");
+      if (user) {
+        const userStringfy = JSON.stringify(user);
+        const userDataJSON = JSON.parse(userStringfy);
+        setUser({ ...userDataJSON });
+        setLoading(false);
+      } else {
+        router.push("/sign-in");
+        localStorage.removeItem("user");
+        setUser(null);
+        setLoading(false);
+      }
+
       onAuthStateChanged(auth, async (user) => {
         if (!user) {
-          setLoading(false);
-          router.push("/sign-in");
+          handleLogout(false);
           return;
         }
         setUser(user);
-        router.push("/");
-        setLoading(false);
       });
     };
     initAuth();
@@ -63,19 +73,20 @@ const AuthProvider = ({ children }: Props) => {
     await signInWithPopup(auth, provider)
       .then(async (newUser) => {
         if (!newUser.user) return;
+        window?.localStorage.setItem("user", JSON.stringify(newUser.user));
+        setUser(newUser.user);
+        router.replace("/");
+        router.refresh();
         if ((await getDoc(doc(db, "users", newUser.user?.uid))).exists())
           return;
 
         const userProfile = doc(collection(db, "users"), newUser.user?.uid);
-
         await setDoc(userProfile, {
           uid: newUser.user?.uid,
           email: newUser.user?.email,
           displayName: newUser.user?.displayName,
           photoURL: newUser.user?.photoURL ?? "/assets/avatar.jpg",
         });
-        router.replace("/");
-        router.refresh();
       })
       .catch(() => toast.error("Failed to Login"));
   };
@@ -86,12 +97,13 @@ const AuthProvider = ({ children }: Props) => {
   };
 
   // Logout (Clear the Session)
-  const handleLogout = async () => {
+  const handleLogout = async (showToast = true) => {
     await auth.signOut();
     setUser(null);
-    toast.success("Logout Successful");
+    window?.localStorage.removeItem("user");
     router.push("/sign-in");
     router.refresh();
+    showToast && toast.success("Logout Successful");
   };
 
   const values = useMemo(() => {

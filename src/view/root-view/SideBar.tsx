@@ -1,14 +1,13 @@
 "use client";
 import React, { useEffect } from "react";
-import { Avatar, Badge, Button, useDisclosure } from "@nextui-org/react";
-import { LogOut, Pencil, Plus, Settings } from "lucide-react";
+import { Avatar, Button } from "@nextui-org/react";
+import { LogOut, Plus, Settings } from "lucide-react";
 import TechStackModal from "@/components/modal/TechStackModal";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import TechStackLogo from "@/components/popover/TechStackLogo";
+import TechStackAvatar from "./components/TechStackAvatar";
 
 const SideBar = () => {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const auth = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -25,40 +24,33 @@ const SideBar = () => {
           {[0, 1, 2, 3].map((ele) => (
             <React.Fragment key={ele}>
               {ele == current ? (
-                <TechStackLogo>
-                  <Badge
-                    isOneChar
-                    content={<Pencil size={12} />}
-                    color="warning"
-                    shape="circle"
-                    placement="top-right"
-                  >
-                    <Avatar
+                <TechStackModal
+                  modalData={ele}
+                  trigger={
+                    <TechStackAvatar
                       onClick={() => router.push(`/?active-tech=${ele}`)}
-                      isBordered
-                      radius="md"
-                      src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png"
-                      className="cursor-pointer"
                       color={ele == current ? "warning" : "default"}
+                      imgUrl="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png"
+                      withBadge
                     />
-                  </Badge>
-                </TechStackLogo>
+                  }
+                />
               ) : (
-                <Avatar
+                <TechStackAvatar
                   onClick={() => router.push(`/?active-tech=${ele}`)}
-                  isBordered
-                  radius="md"
-                  src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png"
-                  className="cursor-pointer"
                   color={ele == current ? "warning" : "default"}
+                  imgUrl="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png"
                 />
               )}
             </React.Fragment>
           ))}
-          <Button onClick={onOpen} isIconOnly color="warning" variant="faded">
-            <Plus />
-          </Button>
-          <TechStackModal isOpen={isOpen} onOpenChange={onOpenChange} />
+          <TechStackModal
+            trigger={
+              <Button isIconOnly color="warning" variant="faded">
+                <Plus />
+              </Button>
+            }
+          />
         </div>
         <div className="flex gap-4 flex-col justify-center items-center">
           <div>

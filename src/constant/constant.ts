@@ -1,4 +1,4 @@
-export const APP_NAME = "Snippy";
+export const APP_NAME = "Snipy";
 
 export const COLLECTION_COLORS = [
   "#37D043",

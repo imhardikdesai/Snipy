@@ -1,11 +1,14 @@
 "use client";
 import React from "react";
 import { Button } from "@nextui-org/react";
-import { FolderClosed, Plus } from "lucide-react";
+import { CopyMinus, Expand, FolderClosed, Plus } from "lucide-react";
 import CustomTreeView from "@/components/custom/CustomTreeView";
 import TreeMenu from "@/components/menu/TreeMenu";
+import useTreeExpansion from "@/hooks/useTreeExpansion";
 
 const CollectionTab = () => {
+  const { expanded, handleToggle, handleExpandAll } = useTreeExpansion([]);
+
   return (
     <div className="bg-[#272a2b] text-gray-300 h-full w-[315px]">
       <div className="flex items-center justify-between gap-2 p-2 pt-4">
@@ -13,15 +16,26 @@ const CollectionTab = () => {
           <FolderClosed />
           <h1 className="uppercase text-sm font-semibold">Collections</h1>
         </div>
-        <Button variant="ghost" size="sm" isIconOnly color="default">
+        <div className="flex gap-1">
           <TreeMenu type="folder">
-            <Plus size={20} />
+            <Button variant="ghost" size="sm" isIconOnly color="default">
+              <Plus size={15} />
+            </Button>
           </TreeMenu>
-        </Button>
+          <Button
+            onClick={handleExpandAll}
+            variant="ghost"
+            size="sm"
+            isIconOnly
+            color="default"
+          >
+            <CopyMinus size={15} />
+          </Button>
+        </div>
       </div>
       <hr className="border-gray-600 rounded-full mx-1" />
       <div className="w-full flex gap-2 flex-col items-start py-2 px-2">
-        <CustomTreeView />
+        <CustomTreeView expanded={expanded} handleToggle={handleToggle} />
       </div>
     </div>
   );

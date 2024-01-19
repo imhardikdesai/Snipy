@@ -1,8 +1,11 @@
+"use client";
+import React from "react";
 import { Button, Input } from "@nextui-org/react";
 import { PlusCircle, SearchIcon } from "lucide-react";
-import React from "react";
+import { useRouter } from "next/navigation";
 
 const TopNav = () => {
+  const router = useRouter();
   return (
     <div className=" text-white w-full flex bg-[#272a2b] items-center border-b border-b-gray-600 rounded-none">
       <Input
@@ -40,6 +43,7 @@ const TopNav = () => {
         isIconOnly
         size="sm"
         className="me-2 rounded-md"
+        onClick={() => router.push("/new")}
       >
         <PlusCircle size={20} />
       </Button>
