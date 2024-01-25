@@ -14,6 +14,7 @@ interface FormControlBoxProps {
   endContent?: React.ReactNode;
   isClearable?: boolean;
   size?: "sm" | "md" | "lg";
+  defaultValue?: any;
 }
 
 const FormControlBox: React.FC<FormControlBoxProps> = ({
@@ -27,6 +28,7 @@ const FormControlBox: React.FC<FormControlBoxProps> = ({
   endContent,
   isClearable,
   size,
+  defaultValue,
 }) => {
   return (
     <FormControl fullWidth>
@@ -49,6 +51,7 @@ const FormControlBox: React.FC<FormControlBoxProps> = ({
             startContent={startContent}
             endContent={endContent}
             size={size}
+            defaultValue={defaultValue}
           />
         )}
       />

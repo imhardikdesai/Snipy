@@ -16,8 +16,10 @@ export default function DashboardLayout({
           <CollectionTab />
         </div>
         <div className="w-full">
-          <TopNav />
-          <div className="p-2 bg-[#272a2b] text-gray-100">{children}</div>
+          <div className="h-full">
+            <TopNav />
+            <div className="bg-[#272a2b] text-gray-100">{children}</div>
+          </div>
         </div>
       </section>
     </main>

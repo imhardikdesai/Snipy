@@ -29,7 +29,7 @@ const CustomTreeItem = (props: any) => {
             {label}
           </Box>
           {isHover && (
-            <TreeMenu type="snippet">
+            <TreeMenu from={label} type="snippet">
               <PlusCircle className="cursor-pointer" size={20} />
             </TreeMenu>
           )}

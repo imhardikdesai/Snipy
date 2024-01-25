@@ -1,7 +1,12 @@
 import React from "react";
+import PostView from "@/view/post-view/PostView";
 
-const NewPost = () => {
-  return <div className="w-full">NewPost</div>;
+const NewPostPage = () => {
+  return (
+    <div className="w-full">
+      <PostView />
+    </div>
+  );
 };
 
-export default NewPost;
+export default NewPostPage;

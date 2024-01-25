@@ -25,7 +25,7 @@ type FormTypes = {
   name: string;
   icon: string;
 };
-const TechStackModal = ({
+const AddFolderModal = ({
   trigger,
   modalData,
 }: {
@@ -130,4 +130,4 @@ const TechStackModal = ({
   );
 };
 
-export default TechStackModal;
+export default AddFolderModal;
