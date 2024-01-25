@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
 import { Button, Input } from "@nextui-org/react";
-import { PlusCircle, SearchIcon } from "lucide-react";
+import { Info, SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import AppInfo from "@/components/modal/AppInfo";
 
-const TopNav = () => {
+const TopNavigation = () => {
   const router = useRouter();
   return (
     <div className=" text-white w-full flex bg-[#272a2b] items-center border-b border-b-gray-600 rounded-none">
@@ -37,18 +38,31 @@ const TopNav = () => {
           <SearchIcon className="text-black/50 mb-0.5 dark:text-white/35 text-slate-400 pointer-events-none flex-shrink-0" />
         }
       />
-      <Button
+      {/* <Button
         color="primary"
         variant="shadow"
         isIconOnly
         size="sm"
-        className="me-2 rounded-md"
+        className="me-2 rounded-md !bg-[#1365DB]"
         onClick={() => router.push("/new")}
       >
         <PlusCircle size={20} />
-      </Button>
+      </Button> */}
+      <AppInfo
+        trigger={
+          <Button
+            color="secondary"
+            variant="shadow"
+            isIconOnly
+            size="sm"
+            className="me-2 rounded-full absolute bottom-5 right-1 !bg-[#864DC1] z-40"
+          >
+            <Info size={20} />
+          </Button>
+        }
+      />
     </div>
   );
 };
 
-export default TopNav;
+export default TopNavigation;
