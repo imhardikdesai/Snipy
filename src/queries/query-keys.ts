@@ -1,3 +1,5 @@
-export const AUTH = {
-  LOGGED_IN: "LOGGED_IN",
+export const SNIPPET = {
+  TECH_STACK: "TECH_STACK",
+  FOLDER: "FOLDER",
+  ADD_TECH_STACK: "ADD_TECH_STACK",
 } as const;

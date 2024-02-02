@@ -8,10 +8,11 @@ import FormControlBox from "@/components/form/FormControlBox";
 import { postSchema } from "@/validation/post";
 import { FormTypes } from "@/types/post";
 import PostFormActions from "./components/PostFormAction";
-import { Files } from "lucide-react";
-import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 const PostView = ({ editData }: { editData?: FormTypes }) => {
+  const router = useRouter();
+
   const defaultValue: FormTypes = {
     content: editData?.content || "",
     title: editData?.title || "",
@@ -27,6 +28,7 @@ const PostView = ({ editData }: { editData?: FormTypes }) => {
   });
 
   const onSubmit = (data: FormTypes) => {
+    console.log(data);
     if (Object.keys(data.content).length === 0) {
       toast.error("Content Cannot Be Empty");
       return;

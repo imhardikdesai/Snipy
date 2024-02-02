@@ -1,4 +1,4 @@
-import React, { cloneElement } from "react";
+import React from "react";
 import {
   Modal,
   ModalContent,
@@ -6,7 +6,6 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  useDisclosure,
   Tooltip,
 } from "@nextui-org/react";
 import FormControlBox from "@/components/form/FormControlBox";
@@ -15,12 +14,9 @@ import { Plus } from "lucide-react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { HandleSetTechStackData, handleSetTechStack } from "@/queries/post";
-import { useAuth } from "@/hooks/useAuth";
-import { SNIPPET } from "@/queries/query-keys";
-import { queryClient } from "@/utils/client";
-import { uuid } from "@/utils/utility";
-import { useMutation } from "@tanstack/react-query";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { handleUpdateSnippetModal } from "@/redux/slices/snippet";
 
 const techStackSchema = yup.object().shape({
   name: yup.string().required("Name is required").max(255, "Name is too long"),
@@ -30,22 +26,13 @@ const techStackSchema = yup.object().shape({
 type FormTypes = {
   name: string;
   icon: string;
-  id?: string | null;
 };
-const TechStackModal = ({
-  trigger,
-  modalData,
-}: {
-  trigger: React.ReactElement;
-  modalData?: any;
-}) => {
-  const auth = useAuth();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const defaultValue: FormTypes = {
-    name: modalData?.name || "",
-    icon: modalData?.icon || "",
-    id: modalData?.id || null,
-  };
+const AddSnippetModal = ({ modalData }: { modalData?: any }) => {
+  const { modalOpen } = useSelector((state: RootState) => state.snippet);
+  const dispatch = useDispatch();
+  const defaultValue: FormTypes = { name: "", icon: "" };
+  const onOpenChange = () => dispatch(handleUpdateSnippetModal(!modalOpen));
+
   const {
     control,
     formState: { errors },
@@ -57,42 +44,14 @@ const TechStackModal = ({
     defaultValues: defaultValue,
   });
 
-  // const { mutate } = useMutation<any>(handleSetTechStack, {
-  //   onSuccess: () => {},
-  //   onError: () => {},
-  //   onSettled: () => {
-  //     queryClient.invalidateQueries({ queryKey: [SNIPPET.TECH_STACK] });
-  //   },
-  // });
-
-  const onSubmit = async (data: FormTypes) => {
-    const isEdited = modalData ? true : false;
-    const mutateData = {
-      user: auth.user,
-      data: {
-        name: data?.name,
-        icon: data?.icon,
-        id: isEdited ? modalData?.id : uuid(),
-      },
-      isEdit: isEdited,
-    };
-    // mutate(mutateData as any);
-    await handleSetTechStack(mutateData)
-      .then(() => {
-        queryClient.invalidateQueries({ queryKey: [SNIPPET.TECH_STACK] });
-      })
-      .finally(() => {
-        onOpenChange();
-      });
+  const onSubmit = (data: FormTypes) => {
+    console.log(data);
   };
   return (
     <React.Fragment>
-      {cloneElement(trigger, {
-        onClick: onOpen,
-      })}
       <Modal
         onClose={() => reset(defaultValue)}
-        isOpen={isOpen}
+        isOpen={modalOpen}
         onOpenChange={onOpenChange}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -100,7 +59,7 @@ const TechStackModal = ({
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1">
-                  {modalData ? "Edit" : "Create"} Tech Stack
+                  {modalData ? "Edit" : "Create"} Snippet
                 </ModalHeader>
                 <ModalBody>
                   {/* Name */}
@@ -120,7 +79,12 @@ const TechStackModal = ({
                       name="icon"
                       size="sm"
                       placeholder="Ex:- mdi:react"
-                      endContent={<Icon fontSize={30} icon={watch().icon} />}
+                      endContent={
+                        <Icon
+                          fontSize={30}
+                          icon={modalData ? modalData.icon : watch().icon}
+                        />
+                      }
                     />
                     <Tooltip
                       size="sm"
@@ -130,9 +94,7 @@ const TechStackModal = ({
                     >
                       <a
                         target="_blank"
-                        href={`https://icon-sets.iconify.design/?query=${
-                          watch().name
-                        }`}
+                        href="https://icon-sets.iconify.design"
                       >
                         <Button
                           isIconOnly
@@ -163,4 +125,4 @@ const TechStackModal = ({
   );
 };
 
-export default TechStackModal;
+export default AddSnippetModal;

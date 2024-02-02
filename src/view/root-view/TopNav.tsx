@@ -2,11 +2,9 @@
 import React from "react";
 import { Button, Input } from "@nextui-org/react";
 import { Info, SearchIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import AppInfo from "@/components/modal/AppInfo";
 
 const TopNavigation = () => {
-  const router = useRouter();
   return (
     <div className=" text-white w-full flex bg-[#272a2b] items-center border-b border-b-gray-600 rounded-none">
       <Input

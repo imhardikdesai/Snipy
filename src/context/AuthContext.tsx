@@ -47,7 +47,7 @@ const AuthProvider = ({ children }: Props) => {
       if (user) {
         const userStringfy = JSON.stringify(user);
         const userDataJSON = JSON.parse(userStringfy);
-        setUser({ ...userDataJSON });
+        setUser({ ...userDataJSON, uid: JSON.parse(user).uid });
         setLoading(false);
       } else {
         router.push("/sign-in");

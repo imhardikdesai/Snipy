@@ -3,43 +3,68 @@ import React, { useEffect } from "react";
 import { Avatar, Button } from "@nextui-org/react";
 import { LogOut, Plus, Settings } from "lucide-react";
 import TechStackModal from "@/components/modal/TechStackModal";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import TechStackAvatar from "./components/TechStackAvatar";
+import { QueryKey, useQuery } from "@tanstack/react-query";
+import { SNIPPET } from "@/queries/query-keys";
+import { fetchTechStack } from "@/queries/post";
+import SidebarLoader from "@/components/skeleton/Sidebar.loader";
+import useQueryParams from "@/hooks/useQueryParams";
+
+const techStackQueryKey: QueryKey = [SNIPPET.TECH_STACK];
 
 const SideBar = () => {
   const auth = useAuth();
-  const searchParams = useSearchParams();
+  const tech = useQueryParams("active-tech");
   const router = useRouter();
-  const [current, setCurrent] = React.useState<any>(null);
-
+  const [current, setCurrent] = React.useState<any>(0);
+  const { data, isLoading, isRefetching } = useQuery({
+    queryKey: techStackQueryKey,
+    queryFn: () => fetchTechStack(auth.user),
+  });
   useEffect(() => {
-    setCurrent(searchParams.get("active-tech") || 0);
-  }, [searchParams]);
+    setCurrent(tech || "");
+  }, [tech]);
+
+  // useEffect(() => {
+  //   if (!tech) {
+  //     data &&
+  //       (data?.length === 0
+  //         ? router.push(`/`)
+  //         : router.push(`/?active-tech=${data[0]?.id}`));
+  //   }
+  // }, [tech, data, router]);
+
+  if (isLoading || isRefetching) {
+    return <SidebarLoader />;
+  }
 
   return (
     <div className="bg-[#1E2021] text-white fixed h-full w-[75px]">
       <div className="w-full flex gap-6 flex-col items-center justify-between h-full py-6">
         <div className="flex gap-6 flex-col justify-center items-center">
-          {[0, 1, 2, 3].map((ele) => (
-            <React.Fragment key={ele}>
-              {ele == current ? (
+          {data?.map((ele) => (
+            <React.Fragment key={ele.id}>
+              {ele?.id == current ? (
                 <TechStackModal
                   modalData={ele}
                   trigger={
                     <TechStackAvatar
-                      onClick={() => router.push(`/?active-tech=${ele}`)}
-                      color={ele == current ? "warning" : "default"}
-                      imgUrl="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png"
+                      onClick={() => router.push(`/?active-tech=${ele?.id}`)}
+                      color={ele?.id == current ? "warning" : "default"}
+                      icon={ele?.icon}
+                      name={ele?.name}
                       withBadge
                     />
                   }
                 />
               ) : (
                 <TechStackAvatar
-                  onClick={() => router.push(`/?active-tech=${ele}`)}
-                  color={ele == current ? "warning" : "default"}
-                  imgUrl="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png"
+                  onClick={() => router.push(`/?active-tech=${ele?.id}`)}
+                  color={ele?.id == current ? "warning" : "default"}
+                  icon={ele?.icon}
+                  name={ele?.name}
                 />
               )}
             </React.Fragment>
