@@ -2,11 +2,13 @@ import React from "react";
 import Link from "next/link";
 import { getRandomCollectionPillColor } from "@/constant/constant";
 import { Badge, cn } from "@nextui-org/react";
+import useQueryParams from "@/hooks/useQueryParams";
 
-const CollectionChip = ({ id }: any) => {
+const CollectionChip = ({ post }: any) => {
+  const activeTech = useQueryParams("active-tech");
   return (
     <React.Fragment>
-      <Link href={"/post/" + id}>
+      <Link href={"/post/" + post?.id + `?active-tech=${activeTech}`}>
         <div className="flex items-center gap-3 cursor-pointer transition-all duration-500 hover:bg-[#141415c2] w-full rounded-md ps-4 py-[5px] my-[6px]">
           <Badge
             size="sm"
@@ -19,7 +21,7 @@ const CollectionChip = ({ id }: any) => {
           >
             <span></span>
           </Badge>
-          <h1>Title Lorem ipsum dolor sit amet consectetur. {id}</h1>
+          <h1>{post?.title}</h1>
         </div>
       </Link>
     </React.Fragment>

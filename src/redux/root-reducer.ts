@@ -2,6 +2,8 @@ import { combineReducers } from "redux";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 // slices
 import authReducer from "./slices/auth";
+import folderReducer from "./slices/folder";
+import snippetReducer from "./slices/snippet";
 
 // ----------------------------------------------------------------------
 
@@ -31,4 +33,6 @@ export const rootPersistConfig = {
 
 export const rootReducer = combineReducers({
   auth: authReducer,
+  folder: folderReducer,
+  snippet: snippetReducer,
 });

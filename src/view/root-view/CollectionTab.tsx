@@ -1,11 +1,12 @@
 "use client";
 import React from "react";
 import { Button } from "@nextui-org/react";
-import { CopyMinus, Expand, FolderClosed, Plus, Trash2 } from "lucide-react";
+import { CopyMinus, FolderClosed, Plus, Trash2 } from "lucide-react";
 import CustomTreeView from "@/components/custom/CustomTreeView";
 import TreeMenu from "@/components/menu/TreeMenu";
 import useTreeExpansion from "@/hooks/useTreeExpansion";
 import DeleteAlert from "@/components/alert/DeleteAlert";
+import AddFolderModal from "@/components/modal/AddFolderModal";
 
 const CollectionTab = () => {
   const { expanded, handleToggle, handleExpandAll } = useTreeExpansion([]);
@@ -15,7 +16,7 @@ const CollectionTab = () => {
       <div className="flex items-center justify-between gap-2 p-2 pt-4">
         <div className="flex items-center justify-start gap-2">
           <FolderClosed />
-          <h1 className="uppercase text-sm font-semibold">Collections</h1>
+          <h1 className="uppercase text-sm font-semibold">Folders</h1>
         </div>
         <div className="flex gap-1">
           <DeleteAlert
@@ -53,6 +54,8 @@ const CollectionTab = () => {
       <div className="w-full flex gap-2 flex-col items-start py-2 px-2">
         <CustomTreeView expanded={expanded} handleToggle={handleToggle} />
       </div>
+      {/* Modals */}
+      <AddFolderModal />
     </div>
   );
 };

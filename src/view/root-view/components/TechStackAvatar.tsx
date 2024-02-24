@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react/dist/iconify.js";
 import { Avatar, Badge, Tooltip } from "@nextui-org/react";
 import { Pencil } from "lucide-react";
 import React from "react";
@@ -5,7 +6,8 @@ import React from "react";
 const TechStackAvatar = ({
   color,
   withBadge = false,
-  imgUrl,
+  icon,
+  name,
   ...props
 }: {
   color:
@@ -17,8 +19,9 @@ const TechStackAvatar = ({
     | "warning"
     | undefined;
   withBadge?: boolean;
-  imgUrl: string;
+  icon: string;
   onClick?: () => void;
+  name: string;
 }) => {
   return withBadge ? (
     <Badge
@@ -30,11 +33,13 @@ const TechStackAvatar = ({
       placement="top-right"
       className="cursor-pointer"
     >
-      <Tooltip placement="right" color="warning" content="Javascript" size="sm">
+      <Tooltip placement="right" color="warning" content={name} size="sm">
+        {/* <Icon icon="logos:javascript" /> */}
         <Avatar
           isBordered
           radius="md"
-          src={imgUrl}
+          // src={imgUrl}
+          icon={<Icon icon={icon} fontSize={40} />}
           className="cursor-pointer"
           color={color}
           {...props}
@@ -42,11 +47,12 @@ const TechStackAvatar = ({
       </Tooltip>
     </Badge>
   ) : (
-    <Tooltip placement="right" color="warning" content="Javascript" size="sm">
+    <Tooltip placement="right" color="warning" content={name} size="sm">
       <Avatar
         isBordered
         radius="md"
-        src={imgUrl}
+        // src={imgUrl}
+        icon={<Icon icon={icon} fontSize={40} />}
         className="cursor-pointer"
         color={color}
         {...props}
